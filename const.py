@@ -9,3 +9,5 @@ class_map = {
     71300: "周日13:00",
     71630: "周日16:30"
 }
+
+de_class_map = dict(zip(class_map.values(), class_map.keys()))
