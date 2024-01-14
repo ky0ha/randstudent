@@ -3,16 +3,6 @@ from tkinter import ttk, messagebox
 import tkinter.font as tkFont
 import pickle, logging, random, time, sys, io
 
-import logging
-
-# logger = logging.getLogger('logger')
-
-# # 创建一个格式化器
-# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# file_handler = logging.FileHandler('my.log')
-# file_handler.setFormatter(formatter)
-
 # logger.addHandler(file_handler)
 logging.basicConfig(filename='my.log', level=logging.INFO, filemode='a', format='%(levelname)s:%(asctime)s:%(message)s')
 
@@ -20,7 +10,6 @@ logging.basicConfig(filename='my.log', level=logging.INFO, filemode='a', format=
 error_output = io.StringIO()
 # 重定向标准错误输出到error_output对象
 sys.stderr = error_output
-# 在这里执行你的代码，任何错误信息都会被保存到error_output中
 
 
 class MY_GUI:
@@ -48,7 +37,6 @@ class MY_GUI:
         
         self.select_combobox = ttk.Combobox(self.select_item_frame, state="readonly")
         self.select_combobox["values"] = ["周五18:30", "周六10:45", "周六13:00", "周六14:45", "周六16:30", "周日09:00", "周日10:45", "周日13:00", "周日16:30"]
-        # self.select_combobox.current(0)
         self.select_combobox.bind("<<ComboboxSelected>>", self.load_treeview_data)
         self.select_combobox.pack(side=RIGHT, anchor=CENTER, expand=NO, padx=5, pady=4)
 
@@ -161,16 +149,6 @@ class MY_GUI:
         
         with open("random_data.dat", "wb") as f:
             pickle.dump(random_data, f)
-    
-    # def on_closing(self):
-    #     # 恢复标准错误输出
-    #     sys.stderr = sys.__stderr__
-    #     # 获取保存的错误信息
-    #     error_message = error_output.getvalue()
-    #     # 打印错误信息
-    #     logging.error(error_message)
-    #     self.init_window_name.destroy()
-    #     exit()
 
 class PopupDisplay(Toplevel):
     '''
@@ -184,7 +162,7 @@ class PopupDisplay(Toplevel):
         self.parents = parent
         self.current_values = current_values if current_values else ""
         self.set_init_window()
-    
+
 
 class InsertPopup(PopupDisplay):
     def set_init_window(self):
@@ -213,14 +191,23 @@ class InsertPopup(PopupDisplay):
     def temp_insert(self):
         self.parents.update_mode["mode"] = 1
         self.parents.update_mode["value"] = self.student_add_entry.get()
-        self.init_window_name.destroy()
+        if self.parents.update_mode["value"]:
+            messagebox.showinfo("成功", "修改成功")
+            self.init_window_name.destroy()
+        else:
+            messagebox.showerror("错误1011", "错误1011：不能添加一个空的学生姓名，请检查添加的姓名内容。")
         
     def insert(self):
         confirm = messagebox.askokcancel("警告", "警告：你正在进行敏感操作，是否确认本次操作（本次操作会被记录）！")
         if confirm:
             self.parents.update_mode["mode"] = 2
             self.parents.update_mode["value"] = self.student_add_entry.get()
-            self.init_window_name.destroy()
+            if self.parents.update_mode["value"]:
+                messagebox.showinfo("成功", "修改成功")
+                self.init_window_name.destroy()
+            else:
+                messagebox.showerror("错误1011", "错误1011：不能添加一个空的学生姓名，请检查添加的姓名内容。")
+        
 
 class DeletePopup(PopupDisplay):
     def set_init_window(self):
@@ -245,14 +232,24 @@ class DeletePopup(PopupDisplay):
     def temp_delete(self):
         self.parents.update_mode["mode"] = 3
         self.parents.update_mode["value"] = self.current_values
-        self.init_window_name.destroy()
+        if self.parents.update_mode["value"]:
+            messagebox.showinfo("成功", "修改成功")
+            self.init_window_name.destroy()
+        else:
+            messagebox.showerror("错误1011", "错误1012：不能删除一个空的学生姓名，请检查添加的姓名内容。")
+        
         
     def delete(self):
         confirm = messagebox.askokcancel("警告", "警告：你正在进行敏感操作，是否确认本次操作（本次操作会被记录）！")
         if confirm:
             self.parents.update_mode["mode"] = 4
             self.parents.update_mode["value"] = self.current_values
-            self.init_window_name.destroy()
+            if self.parents.update_mode["value"]:
+                messagebox.showinfo("成功", "修改成功")
+                self.init_window_name.destroy()
+            else:
+                messagebox.showerror("错误1011", "错误1012：不能删除一个空的学生姓名，请检查添加的姓名内容。")
+        
 
 
 def gui_start():
